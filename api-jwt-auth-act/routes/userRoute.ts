@@ -9,7 +9,7 @@ const router : Router = Router();
 const JWT_SECRET : string = 'supersecretkey';
 
 const users = [
-    { id: 1, username: 'admin', password: 'admin_password', role: 'admin' },
+    { id: 1, username: 'admin', password: '$2a$10$abcdefg', role: 'admin' },
     { id: 2, username: 'user', password: '$2a$10$xyz1234', role: 'user' },
 ];
 
@@ -24,17 +24,28 @@ router.post('/login', (req: Request, res: Response) : Response => {
         return res.status(401).send('Invalid username or password');
     }
 
-    // Validate password
-    const isMatch = bcrypt.compare(user.password, password); //compareSync always returns false so ichange it to compare
-    if (!isMatch) {
-        console.log("HERE")
-        return res.status(401).send('Invalid username or password');
+    const Comp = async() =>{
+        const salt = await bcrypt.genSalt();
+        const hashed = await bcrypt.hash(password, salt);
+        const isMatch = bcrypt.compareSync(password, hashed);
+        console.log(isMatch)
+        console.log(password, hashed);
     }
 
-    // Generate JWT token
-    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+    Comp();
+    // Validate password
+    // const isMatch = bcrypt.compareSync(password, user.password);
 
-    return res.json({ token });
+    return res.json({message: "HEY"});
+    // if (!isMatch) {
+    //     console.log("HERE")
+    //     return res.status(401).send('Invalid username or password');
+    // }
+
+    // // Generate JWT token
+    // const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+
+    // return res.json({ token });
 }); 
 
 declare global {
