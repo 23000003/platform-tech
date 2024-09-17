@@ -1,0 +1,19 @@
+#image
+FROM node:14-alpine
+
+WORKDIR /app
+
+#copy all of its dependencies
+COPY package*.json ./
+
+#and install it ^
+RUN npm i
+
+#copy all ur files
+COPY . .
+
+#expose its port must be matched
+EXPOSE 8081
+
+#the command u used to run the application
+CMD ["npm", "start"]
