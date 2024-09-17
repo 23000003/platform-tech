@@ -8,9 +8,9 @@ const router : Router = Router();
 
 const JWT_SECRET : string = 'supersecretkey';
 
-const users = [
-    { id: 1, username: 'admin', password: '$2a$10$abcdefg', role: 'admin' },
-    { id: 2, username: 'user', password: '$2a$10$xyz1234', role: 'user' },
+const users = [   //admin_password     //user_password          (created my encrypted password mock as the given is returning false)
+    { id: 1, username: 'admin', password: '$2a$10$3XeiDzWLReC0f6Msfy.Ym.aJfzkN1GYdMN6A.uB.1xi/iajoQV3uK', role: 'admin' },
+    { id: 2, username: 'user', password: '$2a$10$YaTXSvO5cIVOO96DDOm/8ec2iPFY4hjBeJ1FrriNLDVi7efaR/3oi', role: 'user' },
 ];
 
 // Login route
@@ -24,28 +24,28 @@ router.post('/login', (req: Request, res: Response) : Response => {
         return res.status(401).send('Invalid username or password');
     }
 
-    const Comp = async() =>{
-        const salt = await bcrypt.genSalt();
-        const hashed = await bcrypt.hash(password, salt);
-        const isMatch = bcrypt.compareSync(password, hashed);
-        console.log(isMatch)
-        console.log(password, hashed);
-    }
-
-    Comp();
-    // Validate password
-    // const isMatch = bcrypt.compareSync(password, user.password);
-
-    return res.json({message: "HEY"});
-    // if (!isMatch) {
-    //     console.log("HERE")
-    //     return res.status(401).send('Invalid username or password');
+    // const Comp = async(): Promise<void> =>{
+    //     const salt = await bcrypt.genSalt();
+    //     const hashed = await bcrypt.hash(password, salt);
+    //     const isMatch = bcrypt.compareSync(password, "$2a$10$3XeiDzWLReC0f6Msfy.Ym.aJfzkN1GYdMN6A.uB.1xi/iajoQV3uK");
+    //     console.log(isMatch)
+    //     console.log(password, hashed);
     // }
 
-    // // Generate JWT token
-    // const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+    // Comp();
 
-    // return res.json({ token });
+    //Validate password
+    const isMatch = bcrypt.compareSync(password, user.password);
+
+    if (!isMatch) {
+        console.log("HERE")
+        return res.status(401).send('Invalid username or password');
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+
+    return res.json({ token });
 }); 
 
 declare global {
