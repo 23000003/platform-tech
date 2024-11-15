@@ -44,5 +44,4 @@ function authorizeRole(role: string) {
     }
 }
 
-
-export { authenticateToken , authorizeRole };
+export { authenticateToken , authorizeRole }
